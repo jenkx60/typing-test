@@ -167,6 +167,10 @@ const TypingTest = () => {
         setCurrentInput("");
     };
 
+    const endTest = () => {
+        setIsRunning(false);
+    };
+
     const calculateWPM = () => {
         const minutes = (60 - timer) / 60;
         return Math.round(correctWords / minutes);
@@ -212,12 +216,15 @@ const TypingTest = () => {
                 <p>Accuracy: <span className='font-bold'>{calculateAccuracy()}%</span></p>
             </div>
 
-            <div className='flex justify-center'>
+            <div className='flex justify-center gap-4'>
                 <button onClick={startTest} className='mt-4 p-2 bg-blue-500 text-white rounded'>
                     Start Test
                 </button>
                 <button onClick={resetTest} className='mt-4 px-4 py-2 bg-blue-500 text-white rounded'> 
                     Restart Test
+                </button>
+                <button onClick={endTest} className='mt-4 px-4 py-2 bg-red-500 text-white rounded'> 
+                    End Test
                 </button>
             </div>
         </div>
