@@ -115,7 +115,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 
 const TypingTest = () => {
-    const [words, setWords] = useState(["nextjs", "typing", "test", "speed", "challenge", "accuracy", "practice", "keyboard"]);
+    const wordList = ["nextjs", "typing", "test", "speed", "challenge", "accuracy", "practice", "keyboard", "react", "javascript", "programming", "development", "frontend", "backend", "fullstack", "software", "engineer", "developer", "code", "debug", "algorithm", "data", "structure", "performance", "optimization", "design", "pattern", "component", "state", "props"];
+    
+    const getRandomWords = (num) => {
+        const shuffled = wordList.sort(() => 0.5 - Math.random());
+        return shuffled.slice(0, num);
+    };
+
+    const [words, setWords] = useState(getRandomWords(50));
     const [wordIndex, setWordIndex] = useState(0);
     const [currentInput, setCurrentInput] = useState("");
     const [correctWords, setCorrectWords] = useState(0);
