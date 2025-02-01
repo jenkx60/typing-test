@@ -2,14 +2,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 
 const TypingTest = () => {
-    const wordList = ["nextjs", "typing", "test", "speed", "challenge", "accuracy", "practice", "keyboard", "react", "javascript", "programming", "development", "frontend", "backend", "fullstack", "software", "engineer", "developer", "code", "debug", "algorithm", "data", "structure", "performance", "optimization", "design", "pattern", "component", "state", "props"];
+    const wordList = ["nextjs", "typing", "test", "speed", "challenge", "accuracy", "practice", "keyboard", "react", "javascript", "programming", "development", "frontend", "backend", "fullstack", "software", "engineer", "developer", "code", "debug", "algorithm", "data", "structure", "performance", "optimization", "design", "pattern", "component", "state", "props", ".", ","];
     
     const getRandomWords = (num) => {
         const shuffled = wordList.sort(() => 0.5 - Math.random());
         return shuffled.slice(0, num);
     };
 
-    const [words, setWords] = useState(getRandomWords(50));
+    const [words, setWords] = useState(getRandomWords(30));
     const [wordIndex, setWordIndex] = useState(0);
     const [currentInput, setCurrentInput] = useState("");
     const [correctWords, setCorrectWords] = useState(0);
@@ -74,12 +74,16 @@ const TypingTest = () => {
         return ((correctWords / (correctWords + incorrectWords || 1)) * 100).toFixed(2);
     };
 
-    return (
-        <div className='max-w-2xl mx-auto p-6 text-center'>
-            <h1 className='text-2xl font-bold'>Typing Speed Test</h1>
-            <p className='mt-2 text-gray-500'>Type the words below as fast as you can!</p>
+    const calculateProgress = () => {
+        return ((60 - timer) / 60) * 100;
+    };
 
-            <div className='mt-4 p-4 border rounded bg-gray-100 dark:bg-gray-800'>
+    return (
+        <div className='max-w-2xl mx-auto p-6 text-center mt-9 bg-gradient-to-bl from-blue-500 to-purple-500 rounded-lg'>
+            <h1 className='text-2xl font-bold'>Typing Speed Test</h1>
+            <p className='mt-2 text-gray-800'>Type the words below as fast as you can!</p>
+
+            <div className='mt-4 p-4 border rounded bg-gray-100 dark:bg-gray-800 dark:text-white'>
                 <p className='text-xl'>
                     {words.map((word, index) => (
                         <span key={index} className={index === wordIndex ? "text-blue-500 font-bold" : ""}>
@@ -97,29 +101,36 @@ const TypingTest = () => {
             <input
                 ref={inputRef}
                 type='text'
-                className='mt-4 w-full p-2 border rounded text-black'
+                className='mt-4 w-full p-2 rounded text-black'
                 value={currentInput}
                 onChange={handleInputChange}
                 autoFocus 
                 disabled={!isRunning}
             />
 
-            <div className='mt-4'>
-                <p>Time Left: <span className='font-bold'>{timer}s</span></p>
-                <p>WPM: <span className='font-bold'>{calculateWPM()}</span></p>
-                <p>Accuracy: <span className='font-bold'>{calculateAccuracy()}%</span></p>
-            </div>
-
-            <div className='flex justify-center gap-4'>
-                <button onClick={startTest} className='mt-4 p-2 bg-blue-500 text-white rounded'>
+            <div className='flex justify-center gap-4 my-5'>
+                <button onClick={startTest} className='mt-4 px-4 py-2 bg-green-700 hover:bg-green-500 text-white rounded'>
                     Start Test
                 </button>
-                <button onClick={resetTest} className='mt-4 px-4 py-2 bg-blue-500 text-white rounded'> 
+                <button onClick={resetTest} className='mt-4 px-4 py-2 bg-blue-700 hover:bg-blue-500 text-white rounded'> 
                     Restart Test
                 </button>
-                <button onClick={endTest} className='mt-4 px-4 py-2 bg-red-500 text-white rounded'> 
+                <button onClick={endTest} className='mt-4 px-4 py-2 bg-red-700 hover:bg-red-500 text-white rounded'> 
                     End Test
                 </button>
+            </div>
+
+            <div className='my-4 h-4 w-full bg-gray-200 dark:bg-gray-700 rounded-full'>
+                <div
+                    className='h-full bg-green-500 rounded-full'
+                    style={{ width: `${calculateProgress()}%` }}
+                ></div>
+            </div>
+
+            <div className='my-10 flex flex-col gap-4'>
+                <p>Time Left: <span className='font-bold'>{timer}s</span></p>
+                <p>Words Per Minutes (WPM): <span className='font-bold'>{calculateWPM()}</span></p>
+                <p>Accuracy: <span className='font-bold'>{calculateAccuracy()}%</span></p>
             </div>
         </div>
     );
