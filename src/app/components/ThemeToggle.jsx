@@ -1,19 +1,35 @@
 "use client"
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
+import { MdDarkMode, MdLightMode } from 'react-icons/md';
 
 const ThemeToggle = () => {
-    const [ theme, setTheme ] = useState('light');
+    // The inital state of the theme is determined by the user's system preference
+    const [ theme, setTheme ] = useState(() => {
+        if (typeof window !== 'undefined') {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                return savedTheme;
+            }
+            const userPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            return userPrefersDark ? 'dark' : 'light';
+        }
+        return 'light';
+    })
 
     useEffect(() => {
-        document.documentElement.classList.toggle('dark', theme === 'dark');
+        if (theme === 'dark') {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+        localStorage.getItem('theme', theme);
     }, [theme]);
   return (
     <div>
         <button
             onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
-            className='p-2 rounded border bg-gray-200 dark:bg-gray-700'
         >
-            {theme === 'light' ? 'Dark Mode' : "Light Mode"}
+            {theme === 'light' ? <MdDarkMode className='text-2xl transition'/> : <MdLightMode className='text-2xl transition'/>}
         </button>
     </div>
   )
