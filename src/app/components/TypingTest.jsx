@@ -101,7 +101,7 @@ const TypingTest = () => {
             <input
                 ref={inputRef}
                 type='text'
-                className='mt-4 w-full p-2 rounded-lg text-black'
+                className='mt-4 w-full p-2 rounded-xl text-black'
                 value={currentInput}
                 onChange={handleInputChange}
                 autoFocus 
