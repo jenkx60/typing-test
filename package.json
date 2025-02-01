@@ -12,6 +12,10 @@
     "next": "15.1.6",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+<<<<<<< HEAD
+=======
+    "next": "15.1.6"
+>>>>>>> 5aa35aff1815038dcb0ea7cdde228a42243a76ac
     "react-icons": "^5.4.0"
   },
   "devDependencies": {
