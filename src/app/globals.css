@@ -15,22 +15,16 @@
 }
 
 body {
-<<<<<<< HEAD
   /* color: var(--text-color-light);
   background-color: var(--bg-color-light); */
-=======
->>>>>>> 5aa35aff1815038dcb0ea7cdde228a42243a76ac
   color: var(--background);
   background-color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
 
 .dark body {
-<<<<<<< HEAD
   /* color: var(--text-color-dark);
   background-color: var(--bg-cooolor-dark); */
-=======
->>>>>>> 5aa35aff1815038dcb0ea7cdde228a42243a76ac
   color: var(--foreground);
   background-color: var(--background);
   font-family: Arial, Helvetica, sans-serif;
