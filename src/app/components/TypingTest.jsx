@@ -1,22 +1,55 @@
 "use client"
 import React, { useState, useEffect, useRef } from 'react';
+import Audio from 'react-loading-icons/dist/esm/components/audio';
+import Bars from 'react-loading-icons/dist/esm/components/bars';
+import Oval from 'react-loading-icons/dist/esm/components/oval';
+import SpinningCircles from 'react-loading-icons/dist/esm/components/spinning-circles';
 
 const TypingTest = () => {
-    const wordList = ["nextjs", "typing", "test", "speed", "challenge", "accuracy", "practice", "keyboard", "react", "javascript", "programming", "development", "frontend", "backend", "fullstack", "software", "engineer", "developer", "code", "debug", "algorithm", "data", "structure", "performance", "optimization", "design", "pattern", "component", "state", "props", ".", ","];
+    // const wordList = ["nextjs", "typing", "test", "speed", "challenge", "accuracy", "practice", "keyboard", "react", "javascript", "programming", "development", "frontend", "backend", "fullstack", "software", "engineer", "developer", "code", "debug", "algorithm", "data", "structure", "performance", "optimization", "design", "pattern", "component", "state", "props", ".", ","];
     
-    const getRandomWords = (num) => {
-        const shuffled = wordList.sort(() => 0.5 - Math.random());
-        return shuffled.slice(0, num);
-    };
+    // const getRandomWords = (num) => {
+    //     const shuffled = wordList.sort(() => 0.5 - Math.random());
+    //     return shuffled.slice(0, num);
+    // };
 
-    const [words, setWords] = useState(getRandomWords(30));
+    const [words, setWords] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
     const [wordIndex, setWordIndex] = useState(0);
     const [currentInput, setCurrentInput] = useState("");
     const [correctWords, setCorrectWords] = useState(0);
     const [incorrectWords, setIncorrectWords] = useState(0);
-    const [timer, setTimer] = useState(60);
+    const [timer, setTimer] = useState(120);
     const [isRunning, setIsRunning] = useState(false);
     const inputRef = useRef(null);
+
+    const fetchText = async () => {
+        setIsLoading(true);
+        try { 
+            const response = await fetch("https://poetrydb.org/title/Ozymandias/lines.json");
+            const data = await response.json();
+            setIsLoading(true);
+            console.log('first data', data);
+
+            if (data.error) {
+                setWords(["Error fetching data"]);
+            } else {
+                const lines = data[0].lines.join(" ");
+                setWords(lines.split(" ").slice(0, 35));
+            }
+            
+        } catch (error) {
+            setWords(["Error fetching data"]);
+            } finally {
+                setIsLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchText();
+    }, []);
+
+
 
     useEffect(() => {
         if (isRunning && timer > 0) {
@@ -46,9 +79,10 @@ const TypingTest = () => {
         setWordIndex(0);
         setCorrectWords(0);
         setIncorrectWords(0);
-        setTimer(60);
+        setTimer(120);
         setIsRunning(true);
         setCurrentInput("");
+        fetchText();
         inputRef.current.focus();
     };
 
@@ -56,7 +90,7 @@ const TypingTest = () => {
         setWordIndex(0);
         setCorrectWords(0);
         setIncorrectWords(0);
-        setTimer(60);
+        setTimer(120);
         setIsRunning(false);
         setCurrentInput("");
     };
@@ -66,7 +100,7 @@ const TypingTest = () => {
     };
 
     const calculateWPM = () => {
-        const minutes = (60 - timer) / 60;
+        const minutes = (120 - timer) / 120;
         return Math.round(correctWords / minutes);
     };
 
@@ -75,7 +109,7 @@ const TypingTest = () => {
     };
 
     const calculateProgress = () => {
-        return ((60 - timer) / 60) * 100;
+        return ((120 - timer) / 120) * 100;
     };
 
     return (
@@ -83,20 +117,26 @@ const TypingTest = () => {
             <h1 className='text-2xl font-bold'>Typing Speed Test</h1>
             <p className='mt-2 text-gray-800'>Type the words below as fast as you can!</p>
 
-            <div className='mt-4 p-4 border rounded bg-gray-100 dark:bg-gray-800 dark:text-white'>
-                <p className='text-xl'>
-                    {words.map((word, index) => (
-                        <span key={index} className={index === wordIndex ? "text-blue-500 font-bold" : ""}>
-                            {index === wordIndex ? 
-                                <span>
-                                    {word.substring(0, currentInput.length)}
-                                    <span className='text-red-500'>{word.substring(currentInput.length)}</span>
-                                </span>
-                                : word}{" "}
-                        </span>
-                    ))}
-                </p>
-            </div>
+            {isLoading ? (
+                <div className='mt-4 p-4 border rounded bg-gray-100 dark:bg-gray-800'>
+                    <p className='text-sm flex justify-center text-center'><SpinningCircles /></p>
+                </div>
+            ) : (
+                <div className='mt-4 p-4 border rounded bg-gray-100 text-white dark:bg-gray-800 dark:text-white'>
+                    <p className='text-xl'>
+                        {words.map((word, index) => (
+                            <span key={index} className={index === wordIndex ? "text-blue-500 font-bold" : ""}>
+                                {index === wordIndex ? 
+                                    <span>
+                                        {word.substring(0, currentInput.length)}
+                                        <span className='text-red-500'>{word.substring(currentInput.length)}</span>
+                                    </span>
+                                    : word}{" "}
+                            </span>
+                        ))}
+                    </p>
+                </div>
+            )}
 
             <input
                 ref={inputRef}
@@ -104,6 +144,7 @@ const TypingTest = () => {
                 className='mt-4 w-full p-2 rounded-xl text-black'
                 value={currentInput}
                 onChange={handleInputChange}
+                placeholder='Start typing...'
                 autoFocus 
                 disabled={!isRunning}
             />
