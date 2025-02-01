@@ -122,7 +122,7 @@ const TypingTest = () => {
                     <p className='text-sm flex justify-center text-center'><SpinningCircles /></p>
                 </div>
             ) : (
-                <div className='mt-4 p-4 border rounded bg-gray-100 text-white dark:bg-gray-800 dark:text-white'>
+                <div className='mt-4 p-4 border rounded bg-gray-100 text-black dark:bg-gray-800 dark:text-white'>
                     <p className='text-xl'>
                         {words.map((word, index) => (
                             <span key={index} className={index === wordIndex ? "text-blue-500 font-bold" : ""}>
